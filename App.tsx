@@ -1,20 +1,113 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { Audio } from "expo-av";
+import { useEffect, useState } from "react";
+import { StatusBar, StyleSheet, View } from "react-native";
+import Player from "./components/Player";
+import { QueueState, useQueue } from "./hooks/useQueue";
+import { useSearch } from "./hooks/useSearch";
+import QueueView from "./views/QueueView";
+import SearchView from "./views/SearchView";
+import SongInfoView from "./views/SongInfoView";
+
+const client = new ApolloClient({
+  uri: "https://api.zora.co/graphql",
+  cache: new InMemoryCache(),
+});
 
 export default function App() {
+  const queueState: QueueState = useQueue();
+  const [isQueueViewOpen, setIsQueueViewOpen] = useState(false);
+  const [isSongInfoViewOpen, setIsSongInfoViewOpen] = useState(false);
+  const [hasSetAudioMode, setHasSetAudioMode] = useState(false);
+  const searchState = useSearch();
+  useEffect(() => {
+    const setUpSound = async () => {
+      await Audio.setAudioModeAsync({
+        staysActiveInBackground: true,
+        allowsRecordingIOS: false,
+        playsInSilentModeIOS: true,
+      });
+    };
+    if (!hasSetAudioMode) {
+      setUpSound();
+      setHasSetAudioMode(true);
+    }
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApolloProvider client={client}>
+      <View style={styles.container}>
+        <StatusBar />
+        <View style={styles.screen}>
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
+              <SongInfoView
+                song={queueState.currentLoadedSong.song}
+                isLooping={queueState.isLooping}
+                onClickLoop={queueState.setIsLooping}
+                handleOpenQueueView={() => {
+                  setIsQueueViewOpen(true);
+                  setIsSongInfoViewOpen(false);
+                }}
+              />
+            )}
+            {isQueueViewOpen && (
+              <QueueView
+                queueState={queueState}
+                handleCloseQueueView={() => setIsQueueViewOpen(false)}
+              />
+            )}
+            {!isSongInfoViewOpen && !isQueueViewOpen && (
+              <SearchView searchState={searchState} queueState={queueState} />
+            )}
+          </View>
+
+          <View style={styles.player}>
+            <Player
+              queueState={queueState}
+              onChangeIsSongInfoViewOpen={() => {
+                setIsSongInfoViewOpen(!isSongInfoViewOpen);
+                setIsQueueViewOpen(false);
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    </ApolloProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#2d2d2d",
+    alignItems: "center",
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  screen: {
+    width: "100%",
+    alignItems: "center",
+    flex: 1,
+    marginTop: 20,
+  },
+  player: {
+    width: "100%",
+    alignItems: "center",
+    height: 200,
+    shadowColor: "#171717",
+    shadowOffset: { width: 0, height: -2 },
+    borderTopWidth: 0.5,
+    borderLeftWidth: 0.5,
+    borderRightWidth: 0.5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    backgroundColor: "black",
   },
 });
