@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 import Player from "./components/Player";
 import { QueueState, useQueue } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
@@ -78,6 +79,7 @@ export default function App() {
             />
           </View>
         </View>
+        <Toast position="bottom" bottomOffset={200} />
       </View>
     </ApolloProvider>
   );

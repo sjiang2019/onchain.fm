@@ -1,4 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { Token } from "../models/token";
 import SongDisplay from "./SongDisplay";
 import Text from "./Text";
@@ -25,7 +26,13 @@ export default function SongListItem(props: SongListItemProps): JSX.Element {
       <SongDisplay song={props.song} />
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => props.addToUserQueue(props.song)}
+          onPress={() => {
+            props.addToUserQueue(props.song);
+            Toast.show({
+              type: "success",
+              text1: "added to queue",
+            });
+          }}
           style={{ marginRight: 20 }}
         >
           <Text style={{ fontSize: 24 }}>＋</Text>
@@ -33,7 +40,9 @@ export default function SongListItem(props: SongListItemProps): JSX.Element {
         {props.removeFromQueue != null && (
           <TouchableOpacity
             style={{ paddingTop: 6 }}
-            onPress={() => props.removeFromQueue!(props.song)}
+            onPress={() => {
+              props.removeFromQueue!(props.song);
+            }}
           >
             <Text style={{ fontSize: 20 }}>✕</Text>
           </TouchableOpacity>

@@ -37,9 +37,13 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
             <Text style={{ fontSize: 18, paddingLeft: 16 }}>up next</Text>
             <SongListing
               songs={props.queueState.userQueue}
-              onChangeCurrentSong={(song: Token) => {
-                props.queueState.removeFromUserQueue(song);
-                props.queueState.handleSetCurrentSong(song);
+              onChangeCurrentSong={async (song: Token) => {
+                const didSetSong = await props.queueState.handleSetCurrentSong(
+                  song
+                );
+                if (didSetSong) {
+                  props.queueState.removeFromUserQueue(song);
+                }
               }}
               addToUserQueue={props.queueState.addToUserQueue}
               removeFromQueue={props.queueState.removeFromUserQueue}
@@ -50,9 +54,13 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
         <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
         <SongListing
           songs={props.queueState.globalQueue}
-          onChangeCurrentSong={(song: Token) => {
-            props.queueState.removeFromGlobalQueue(song);
-            props.queueState.handleSetCurrentSong(song);
+          onChangeCurrentSong={async (song: Token) => {
+            const didSetSong = await props.queueState.handleSetCurrentSong(
+              song
+            );
+            if (didSetSong) {
+              props.queueState.removeFromGlobalQueue(song);
+            }
           }}
           addToUserQueue={handleAddToUserQueueFromGlobalQueue}
           removeFromQueue={props.queueState.removeFromGlobalQueue}

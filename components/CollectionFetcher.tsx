@@ -52,9 +52,13 @@ export default function CollectionFetcher(
   return (
     <View>
       {queriedCollectionsLoading || searchedCollectionsLoading ? (
-        <Text style={{ fontSize: 16 }}>❀ ❀ ❀ searching collections ❀ ❀ ❀</Text>
+        <Text style={{ fontSize: 16, marginTop: 20 }}>
+          ❀ ❀ ❀ searching collections ❀ ❀ ❀
+        </Text>
       ) : queriedCollectionsError || searchedCollectionsError ? (
-        <Text style={{ fontSize: 16 }}>we encountered an error :{"("}</Text>
+        <Text style={{ fontSize: 16, marginTop: 20 }}>
+          we encountered an error :{"("}
+        </Text>
       ) : (
         collections &&
         collections.length > 0 && (

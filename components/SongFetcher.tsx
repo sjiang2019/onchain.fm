@@ -6,10 +6,12 @@ import SongPaginator from "./SongPaginator";
 import Text from "./Text";
 
 interface SongFetcherProps {
-  onChangeSelectedSong: (song: Token | null) => void;
+  onChangeSelectedSong: (song: Token | null) => Promise<boolean>;
   addToUserQueue: (song: Token) => void;
   handleChangeGlobalQueue: (songs: Array<Token>) => void;
   isLoading: boolean;
+  offset: number;
+  setOffset: (setOffsetFn: (offset: number) => number) => void;
   collection?: Collection;
   ownerAddress?: string;
 }
@@ -23,9 +25,9 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
     data: musicNfts,
   } = useFetchMusicNfts(props.collection, props.ownerAddress);
 
-  const handleChangeCurrentSong = (song: Token) => {
-    props.onChangeSelectedSong(song);
-    if (musicNfts.length > 0) {
+  const handleChangeCurrentSong = async (song: Token) => {
+    const didSetSong = await props.onChangeSelectedSong(song);
+    if (didSetSong && musicNfts.length > 0) {
       const startIdx = musicNfts.indexOf(song) + 1;
       const nextSongs = musicNfts.slice(startIdx, startIdx + GLOBAL_QUEUE_SIZE);
       let prevSongs = [];
@@ -54,11 +56,15 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
     >
       {loading ? (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16 }}>❀ ❀ ❀ searching music ❀ ❀ ❀</Text>
+          <Text style={{ fontSize: 16, marginTop: 20 }}>
+            ❀ ❀ ❀ searching music ❀ ❀ ❀
+          </Text>
         </View>
       ) : error ? (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16 }}>we encountered an error :{"("}</Text>
+          <Text style={{ fontSize: 16, marginTop: 20 }}>
+            we encountered an error :{"("}
+          </Text>
         </View>
       ) : musicNfts.length > 0 ? (
         <SongPaginator
@@ -66,10 +72,14 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
           onChangeCurrentSong={handleChangeCurrentSong}
           addToUserQueue={props.addToUserQueue}
           isLoading={props.isLoading}
+          offset={props.offset}
+          setOffset={props.setOffset}
         />
       ) : (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16 }}>no music found :{"("}</Text>
+          <Text style={{ fontSize: 16, marginTop: 20 }}>
+            no music found :{"("}
+          </Text>
         </View>
       )}
     </SafeAreaView>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import CollectionFetcher from "../components/CollectionFetcher";
 import SearchInput from "../components/SearchInput";
@@ -28,15 +27,16 @@ interface SearchViewProps {
 }
 
 export default function SearchView(props: SearchViewProps): JSX.Element {
-  const { query, onChangeQuery, submitted, onChangeSubmitted } =
-    props.searchState;
-  const [selectedCollection, setSelectedCollection] =
-    useState<Collection | null>(null);
-
-  const handleChangeSubmitted = (query: string | null) => {
-    setSelectedCollection(null);
-    onChangeSubmitted(query);
-  };
+  const {
+    query,
+    onChangeQuery,
+    submitted,
+    onChangeSubmitted,
+    selectedCollection,
+    setSelectedCollection,
+    offset,
+    setOffset,
+  } = props.searchState;
 
   const owner = shouldQueryByOwner(submitted, selectedCollection)
     ? submitted
@@ -49,7 +49,7 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
           <SearchInput
             text={query}
             onChangeText={onChangeQuery}
-            onChangeSubmittedText={handleChangeSubmitted}
+            onChangeSubmittedText={onChangeSubmitted}
           />
         </View>
       </View>
@@ -75,6 +75,8 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
             addToUserQueue={props.queueState.addToUserQueue}
             handleChangeGlobalQueue={props.queueState.setGlobalQueue}
             isLoading={props.queueState.isLoading}
+            offset={offset}
+            setOffset={setOffset}
           />
         )}
       </View>
