@@ -2,40 +2,50 @@ import { ApolloError, gql, useQuery } from "@apollo/client";
 import { Collection } from "../models/collection";
 import { Token } from "../models/token";
 
-export const MusicNFTSearchQuery: string = `
-    query MusicNFTs($collectionAddresses: [String!], $ownerAddresses: [String!]) {
-        tokens(
-          pagination: {limit: 500}, 
-          where: {collectionAddresses: $collectionAddresses, ownerAddresses: $ownerAddresses}, 
-          filter: {mediaType: AUDIO}
-        ) {
-        nodes {
-          token {
-              collectionAddress
-              tokenId
-              name
-              collectionName
-              owner
-              description
-              content {
-                mediaEncoding {
-                    ... on AudioEncodingTypes {
-                        original
-                    }
-                  }
-              }
-              image {
-                  mediaEncoding {
-                    ... on ImageEncodingTypes {
-                        thumbnail
-                      }
-                  }
-              }
-              metadata
-          }
+export const TokenFragment = gql`
+  fragment TokenFragment on Token {
+    collectionAddress
+    tokenId
+    name
+    collectionName
+    owner
+    description
+    content {
+      mediaEncoding {
+        ... on AudioEncodingTypes {
+          original
         }
       }
     }
+    image {
+      mediaEncoding {
+        ... on ImageEncodingTypes {
+          thumbnail
+        }
+      }
+    }
+    metadata
+  }
+`;
+
+export const MusicNFTSearchQuery = gql`
+  query MusicNFTs($collectionAddresses: [String!], $ownerAddresses: [String!]) {
+    tokens(
+      pagination: { limit: 500 }
+      where: {
+        collectionAddresses: $collectionAddresses
+        ownerAddresses: $ownerAddresses
+      }
+      filter: { mediaType: AUDIO }
+    ) {
+      nodes {
+        token {
+          ...TokenFragment
+        }
+      }
+    }
+  }
+  ${TokenFragment}
 `;
 
 export function useFetchMusicNfts(
@@ -45,7 +55,7 @@ export function useFetchMusicNfts(
   const collectionAddresses =
     collection == null ? undefined : [collection.collectionAddress];
   const ownerAddresses = ownerAddress == null ? undefined : [ownerAddress];
-  const { loading, error, data } = useQuery(gql(MusicNFTSearchQuery), {
+  const { loading, error, data } = useQuery(MusicNFTSearchQuery, {
     variables: {
       collectionAddresses: collectionAddresses,
       ownerAddresses: ownerAddresses,

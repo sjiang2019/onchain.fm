@@ -8,6 +8,7 @@ interface SongPaginatorProps {
   songs: Array<Token>;
   onChangeCurrentSong: (song: Token) => void;
   addToUserQueue: (song: Token) => void;
+  isLoading: boolean;
 }
 
 export default function SongPaginator(props: SongPaginatorProps): JSX.Element {

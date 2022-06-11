@@ -19,6 +19,8 @@ export function useSearch(): SearchState {
     onChangeSubmitted: (submitted: string | null) => {
       if (submitted != null) {
         setSubmitted(normalizeText(submitted));
+      } else {
+        setSubmitted(null);
       }
     },
   };

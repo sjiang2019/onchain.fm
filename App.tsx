@@ -47,15 +47,7 @@ export default function App() {
             }}
           >
             {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
-              <SongInfoView
-                song={queueState.currentLoadedSong.song}
-                isLooping={queueState.isLooping}
-                onClickLoop={queueState.setIsLooping}
-                handleOpenQueueView={() => {
-                  setIsQueueViewOpen(true);
-                  setIsSongInfoViewOpen(false);
-                }}
-              />
+              <SongInfoView song={queueState.currentLoadedSong.song} />
             )}
             {isQueueViewOpen && (
               <QueueView
@@ -74,6 +66,14 @@ export default function App() {
               onChangeIsSongInfoViewOpen={() => {
                 setIsSongInfoViewOpen(!isSongInfoViewOpen);
                 setIsQueueViewOpen(false);
+              }}
+              handleToggleQueueView={() => {
+                if (!isQueueViewOpen) {
+                  setIsQueueViewOpen(true);
+                  setIsSongInfoViewOpen(false);
+                } else {
+                  setIsQueueViewOpen(false);
+                }
               }}
             />
           </View>

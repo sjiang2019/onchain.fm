@@ -43,6 +43,7 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
               }}
               addToUserQueue={props.queueState.addToUserQueue}
               removeFromQueue={props.queueState.removeFromUserQueue}
+              isLoading={props.queueState.isLoading}
             />
           </View>
         )}
@@ -55,6 +56,7 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
           }}
           addToUserQueue={handleAddToUserQueueFromGlobalQueue}
           removeFromQueue={props.queueState.removeFromGlobalQueue}
+          isLoading={props.queueState.isLoading}
         />
       </SafeAreaView>
     </View>

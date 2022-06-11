@@ -9,6 +9,7 @@ interface SongFetcherProps {
   onChangeSelectedSong: (song: Token | null) => void;
   addToUserQueue: (song: Token) => void;
   handleChangeGlobalQueue: (songs: Array<Token>) => void;
+  isLoading: boolean;
   collection?: Collection;
   ownerAddress?: string;
 }
@@ -64,6 +65,7 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
           songs={musicNfts}
           onChangeCurrentSong={handleChangeCurrentSong}
           addToUserQueue={props.addToUserQueue}
+          isLoading={props.isLoading}
         />
       ) : (
         <View style={{ width: "100%", alignItems: "center" }}>
