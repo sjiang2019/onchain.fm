@@ -2,7 +2,7 @@ import { Sound } from "expo-av/build/Audio";
 import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useState } from "react";
 import { Token } from "../models/token";
-import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 export interface LoadedSong {
   song: Token;
@@ -18,7 +18,7 @@ export interface QueueState {
   handlePlayPreviousSong: () => void;
   handlePlayNextSong: () => void;
   currentLoadedSong: LoadedSong | null;
-  handleSetCurrentSong: (song: Token | null) => void;
+  handleSetCurrentSong: (song: Token | null) => Promise<boolean>;
   removeFromUserQueue: (song: Token) => void;
   removeFromGlobalQueue: (song: Token) => void;
   isPlaying: boolean;
@@ -26,6 +26,19 @@ export interface QueueState {
   soundStatus: AVPlaybackStatus | null;
   isLooping: boolean;
   setIsLooping: (isLooping: boolean) => void;
+  isLoading: boolean;
+}
+
+function fetchSoundWithTimeout(
+  audioUri: string,
+  timeoutMs: number
+): Promise<{ sound: Sound; status: AVPlaybackStatus }> {
+  return new Promise(function (resolve, reject) {
+    Audio.Sound.createAsync({
+      uri: audioUri,
+    }).then(resolve, reject);
+    setTimeout(reject, timeoutMs);
+  });
 }
 
 export function useQueue(): QueueState {
@@ -39,6 +52,7 @@ export function useQueue(): QueueState {
   const [soundStatus, setSoundStatus] = useState<AVPlaybackStatus | null>(null);
   const [songJustFinished, setSongJustFinished] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // History
   const addToHistory = (song: Token) => {
@@ -57,14 +71,15 @@ export function useQueue(): QueueState {
   };
 
   // Playback
-  const handleSetCurrentSong = async (song: Token | null) => {
-    if (song != null && song.audioUri != null) {
+  const handleSetCurrentSong = async (song: Token | null): Promise<boolean> => {
+    let didSuccessfullySetSong = false;
+    if (song != null && song.audioUri != null && !isLoading) {
       try {
-        const { sound } = await Audio.Sound.createAsync({
-          uri: song.audioUri,
-        });
+        setIsLoading(true);
+        const { sound } = await fetchSoundWithTimeout(song.audioUri, 3000);
         if (sound != null) {
           setCurrentLoadedSong({ song: song, sound: sound });
+          didSuccessfullySetSong = true;
           setIsPlaying(true);
           sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
             setSoundStatus(status);
@@ -74,9 +89,16 @@ export function useQueue(): QueueState {
           });
         }
       } catch (e) {
-        Alert.alert(`encoding audio for ${song.name}, try again later`);
+        Toast.show({
+          type: "error",
+          text1: "audio encoding in progress",
+          text2: `${song.name}`,
+        });
+      } finally {
+        setIsLoading(false);
       }
     }
+    return didSuccessfullySetSong;
   };
 
   const handlePlayPreviousSong = () => {
@@ -143,5 +165,6 @@ export function useQueue(): QueueState {
     soundStatus,
     isLooping,
     setIsLooping,
+    isLoading,
   };
 }

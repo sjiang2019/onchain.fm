@@ -59,6 +59,8 @@ export default function SearchInput(props: SearchInputProps): JSX.Element {
       {clicked && (
         <TouchableOpacity
           onPress={() => {
+            props.onChangeText(null);
+            props.onChangeSubmittedText(null);
             setClicked(false);
             Keyboard.dismiss();
           }}

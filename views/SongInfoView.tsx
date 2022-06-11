@@ -1,7 +1,6 @@
 import { Token } from "../models/token";
 import {
   Image,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -11,49 +10,8 @@ import {
 import Text from "../components/Text";
 import { useState } from "react";
 
-function SongInfoNav(props: {
-  isLooping: boolean;
-  onClickLoopButton: (isLooping: boolean) => void;
-  handleOpenQueueView: () => void;
-}): JSX.Element {
-  return (
-    <View style={styles.songInfoNav}>
-      <TouchableOpacity
-        onPress={() => props.onClickLoopButton(!props.isLooping)}
-        style={{ paddingLeft: 16, marginBottom: 10 }}
-      >
-        <Text
-          style={{
-            fontSize: Platform.OS === "web" ? 24 : 42,
-            lineHeight: Platform.OS === "web" ? 24 : 36,
-            color: props.isLooping ? "#9B59B6" : "white",
-          }}
-        >
-          ⟳
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => props.handleOpenQueueView()}
-        style={{ paddingRight: 16, marginBottom: 10 }}
-      >
-        <Text
-          style={{
-            fontSize: 32,
-            lineHeight: 32,
-          }}
-        >
-          ≡
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 interface SongInfoViewProps {
   song: Token;
-  isLooping: boolean;
-  onClickLoop: (isLooping: boolean) => void;
-  handleOpenQueueView: () => void;
 }
 export default function SongInfoView(props: SongInfoViewProps): JSX.Element {
   const song = props.song;
@@ -61,15 +19,8 @@ export default function SongInfoView(props: SongInfoViewProps): JSX.Element {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
-        <SongInfoNav
-          isLooping={props.isLooping}
-          onClickLoopButton={props.onClickLoop}
-          handleOpenQueueView={props.handleOpenQueueView}
-        />
         <ScrollView style={{ paddingLeft: 16, paddingRight: 16 }}>
-          <View
-            style={{ width: "100%", alignItems: "center", marginBottom: 20 }}
-          >
+          <View style={styles.header}>
             <Text style={{ fontSize: 24, marginBottom: 12 }}>{song.name}</Text>
             {song?.imageUri && (
               <Image
@@ -122,11 +73,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  songInfoNav: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignContent: "flex-start",
-    marginTop: 10,
+  header: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 20,
   },
   showMetadataButton: {
     width: "80%",

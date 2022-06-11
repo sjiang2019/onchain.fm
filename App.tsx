@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 import Player from "./components/Player";
 import { QueueState, useQueue } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
@@ -47,15 +48,7 @@ export default function App() {
             }}
           >
             {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
-              <SongInfoView
-                song={queueState.currentLoadedSong.song}
-                isLooping={queueState.isLooping}
-                onClickLoop={queueState.setIsLooping}
-                handleOpenQueueView={() => {
-                  setIsQueueViewOpen(true);
-                  setIsSongInfoViewOpen(false);
-                }}
-              />
+              <SongInfoView song={queueState.currentLoadedSong.song} />
             )}
             {isQueueViewOpen && (
               <QueueView
@@ -75,9 +68,18 @@ export default function App() {
                 setIsSongInfoViewOpen(!isSongInfoViewOpen);
                 setIsQueueViewOpen(false);
               }}
+              handleToggleQueueView={() => {
+                if (!isQueueViewOpen) {
+                  setIsQueueViewOpen(true);
+                  setIsSongInfoViewOpen(false);
+                } else {
+                  setIsQueueViewOpen(false);
+                }
+              }}
             />
           </View>
         </View>
+        <Toast position="bottom" bottomOffset={200} />
       </View>
     </ApolloProvider>
   );

@@ -31,6 +31,7 @@ function TrackSlider(props: {
 interface PlayerControlProps {
   queueState: QueueState;
   onChangeIsPlayerOpen: () => void;
+  handleToggleQueueView: () => void;
 }
 
 export default function PlayerControls(props: PlayerControlProps): JSX.Element {
@@ -97,6 +98,22 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
           </View>
           <View style={styles.controlsView}>
             <TouchableOpacity
+              onPress={() =>
+                props.queueState.setIsLooping(!props.queueState.isLooping)
+              }
+              style={{ paddingTop: 4 }}
+            >
+              <Text
+                style={{
+                  fontSize: Platform.OS === "web" ? 24 : 42,
+                  lineHeight: Platform.OS === "web" ? 48 : 48,
+                  color: props.queueState.isLooping ? "#9B59B6" : "white",
+                }}
+              >
+                ⟳
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => props.queueState.handlePlayPreviousSong()}
             >
               <Text style={{ fontSize: 48 }}>🌜</Text>
@@ -119,6 +136,16 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
               onPress={() => props.queueState.handlePlayNextSong()}
             >
               <Text style={{ fontSize: 48 }}>🌛</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={props.handleToggleQueueView}>
+              <Text
+                style={{
+                  fontSize: 32,
+                  lineHeight: 48,
+                }}
+              >
+                ≡
+              </Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import CollectionFetcher from "../components/CollectionFetcher";
 import SearchInput from "../components/SearchInput";
 import SongFetcher from "../components/SongFetcher";
-import Text from "../components/Text";
+import WelcomeMessage from "../components/WelcomeMessage";
 import { QueueState } from "../hooks/useQueue";
 import { SearchState } from "../hooks/useSearch";
 import { Collection } from "../models/collection";
@@ -22,39 +21,22 @@ const shouldQueryByOwner = (
   return isEnsLike(query) || isAddressLike(query);
 };
 
-function WelcomeMessage(): JSX.Element {
-  return (
-    <View style={{ width: "90%", alignItems: "center", marginTop: 18 }}>
-      <Text style={{ fontSize: 18, marginBottom: 18 }}>
-        welcome to onchain.fm
-      </Text>
-      <View style={{ alignItems: "flex-start" }}>
-        <Text style={{ fontSize: 16, marginBottom: 12 }}>
-          ❀ search for a collection by name or address
-        </Text>
-        <Text style={{ fontSize: 16 }}>
-          ❀ search for an owner by ENS or address
-        </Text>
-      </View>
-    </View>
-  );
-}
-
 interface SearchViewProps {
   searchState: SearchState;
   queueState: QueueState;
 }
 
 export default function SearchView(props: SearchViewProps): JSX.Element {
-  const { query, onChangeQuery, submitted, onChangeSubmitted } =
-    props.searchState;
-  const [selectedCollection, setSelectedCollection] =
-    useState<Collection | null>(null);
-
-  const handleChangeSubmitted = (query: string | null) => {
-    setSelectedCollection(null);
-    onChangeSubmitted(query);
-  };
+  const {
+    query,
+    onChangeQuery,
+    submitted,
+    onChangeSubmitted,
+    selectedCollection,
+    setSelectedCollection,
+    offset,
+    setOffset,
+  } = props.searchState;
 
   const owner = shouldQueryByOwner(submitted, selectedCollection)
     ? submitted
@@ -67,11 +49,18 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
           <SearchInput
             text={query}
             onChangeText={onChangeQuery}
-            onChangeSubmittedText={handleChangeSubmitted}
+            onChangeSubmittedText={onChangeSubmitted}
           />
         </View>
       </View>
       <View style={styles.fetcherContainer}>
+        {submitted == null && (
+          <WelcomeMessage
+            onChangeCurrentSong={props.queueState.handleSetCurrentSong}
+            addToUserQueue={props.queueState.addToUserQueue}
+            isLoading={props.queueState.isLoading}
+          />
+        )}
         {selectedCollection == null && submitted != null && (
           <CollectionFetcher
             submitted={submitted}
@@ -85,9 +74,11 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
             onChangeSelectedSong={props.queueState.handleSetCurrentSong}
             addToUserQueue={props.queueState.addToUserQueue}
             handleChangeGlobalQueue={props.queueState.setGlobalQueue}
+            isLoading={props.queueState.isLoading}
+            offset={offset}
+            setOffset={setOffset}
           />
         )}
-        {submitted == null && <WelcomeMessage />}
       </View>
     </View>
   );

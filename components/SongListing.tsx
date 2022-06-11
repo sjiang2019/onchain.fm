@@ -9,6 +9,7 @@ interface SongListingProps {
   removeFromQueue?: (song: Token) => void;
   hasNextPage?: boolean;
   loadMoreButton?: JSX.Element;
+  isLoading: boolean;
 }
 
 export default function SongListing(props: SongListingProps): JSX.Element {
@@ -17,6 +18,7 @@ export default function SongListing(props: SongListingProps): JSX.Element {
       data={props.songs}
       renderItem={({ item }) => (
         <SongListItem
+          isLoading={props.isLoading}
           song={item}
           onChangeSong={props.onChangeCurrentSong}
           addToUserQueue={props.addToUserQueue}

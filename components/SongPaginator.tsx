@@ -8,16 +8,18 @@ interface SongPaginatorProps {
   songs: Array<Token>;
   onChangeCurrentSong: (song: Token) => void;
   addToUserQueue: (song: Token) => void;
+  isLoading: boolean;
+  offset: number;
+  setOffset: (setOffsetFn: (offset: number) => number) => void;
 }
 
 export default function SongPaginator(props: SongPaginatorProps): JSX.Element {
   const limit = 10;
-  const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState<Array<Token>>([]);
 
   useEffect(() => {
-    setCurrentPage(props.songs.slice(0, offset + limit));
-  }, [offset, props.songs]);
+    setCurrentPage(props.songs.slice(0, props.offset + limit));
+  }, [props.offset, props.songs]);
 
   return (
     <SongListing
@@ -25,7 +27,7 @@ export default function SongPaginator(props: SongPaginatorProps): JSX.Element {
       loadMoreButton={
         <TouchableOpacity
           style={styles.loadMoreButton}
-          onPress={() => setOffset((curOffset) => curOffset + limit)}
+          onPress={() => props.setOffset((curOffset) => curOffset + limit)}
         >
           <Text style={styles.loadMoreText}>load more</Text>
         </TouchableOpacity>
