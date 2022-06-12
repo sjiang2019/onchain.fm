@@ -52,20 +52,23 @@ export default function CollectionFetcher(
   return (
     <View>
       {queriedCollectionsLoading || searchedCollectionsLoading ? (
-        <Text style={{ fontSize: 16, marginTop: 20 }}>
+        <Text style={{ fontSize: 18, marginTop: 20 }}>
           ❀ ❀ ❀ searching collections ❀ ❀ ❀
         </Text>
       ) : queriedCollectionsError || searchedCollectionsError ? (
-        <Text style={{ fontSize: 16, marginTop: 20 }}>
+        <Text style={{ fontSize: 18, marginTop: 20 }}>
           we encountered an error :{"("}
         </Text>
       ) : (
         collections &&
         collections.length > 0 && (
-          <CollectionListing
-            collections={collections}
-            onChangeCollection={props.onChangeSelectedCollection}
-          />
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <Text style={{ fontSize: 24, padding: 8 }}>collections</Text>
+            <CollectionListing
+              collections={collections}
+              onChangeCollection={props.onChangeSelectedCollection}
+            />
+          </View>
         )
       )}
     </View>

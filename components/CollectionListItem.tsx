@@ -20,7 +20,7 @@ export default function CollectionListItem(
     >
       <View style={styles.view}>
         <View>
-          <Text style={{ fontSize: 14 }} ellipsizeMode="tail" numberOfLines={1}>
+          <Text style={{ fontSize: 18 }} ellipsizeMode="tail" numberOfLines={1}>
             {props.collection.name ?? "untitled"}
           </Text>
         </View>
