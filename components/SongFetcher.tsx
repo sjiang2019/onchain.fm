@@ -47,6 +47,16 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
     }
   };
 
+  const searchLoadingText =
+    props.ownerAddress == null
+      ? "❀ ❀ ❀ searching music ❀ ❀ ❀"
+      : "❀ ❀ ❀ searching owners ❀ ❀ ❀";
+
+  const noneFoundText =
+    props.ownerAddress == null
+      ? "no music found :("
+      : `no music owned by ${props.ownerAddress}`;
+
   return (
     <SafeAreaView
       style={{
@@ -56,13 +66,13 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
     >
       {loading ? (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16, marginTop: 20 }}>
-            ❀ ❀ ❀ searching music ❀ ❀ ❀
+          <Text style={{ fontSize: 18, marginTop: 20 }}>
+            {searchLoadingText}
           </Text>
         </View>
       ) : error ? (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16, marginTop: 20 }}>
+          <Text style={{ fontSize: 18, marginTop: 20 }}>
             we encountered an error :{"("}
           </Text>
         </View>
@@ -77,9 +87,7 @@ export default function SongFetcher(props: SongFetcherProps): JSX.Element {
         />
       ) : (
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={{ fontSize: 16, marginTop: 20 }}>
-            no music found :{"("}
-          </Text>
+          <Text style={{ fontSize: 16, marginTop: 20 }}>{noneFoundText}</Text>
         </View>
       )}
     </SafeAreaView>
