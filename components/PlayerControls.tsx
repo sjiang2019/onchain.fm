@@ -72,7 +72,10 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
               props.onChangeIsPlayerOpen();
             }
           }}
-          disabled={props.queueState.currentLoadedSong == null}
+          disabled={
+            props.queueState.currentLoadedSong == null ||
+            props.queueState.isLoading
+          }
           style={styles.container}
         >
           <View style={styles.view}>
@@ -115,6 +118,7 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => props.queueState.handlePlayPreviousSong()}
+              disabled={props.queueState.isLoading}
             >
               <Text style={{ fontSize: 48 }}>🌜</Text>
             </TouchableOpacity>
@@ -127,13 +131,14 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
               disabled={props.queueState.currentLoadedSong == null}
             >
               {props.queueState.isPlaying ? (
-                <Text style={{ fontSize: 48 }}>🌑</Text>
+                <Text style={{ fontSize: 48 }}>🌝</Text>
               ) : (
-                <Text style={{ fontSize: 48 }}>☀️</Text>
+                <Text style={{ fontSize: 48 }}>🌞</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => props.queueState.handlePlayNextSong()}
+              disabled={props.queueState.isLoading}
             >
               <Text style={{ fontSize: 48 }}>🌛</Text>
             </TouchableOpacity>

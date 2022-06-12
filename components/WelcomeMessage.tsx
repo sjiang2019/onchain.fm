@@ -13,12 +13,17 @@ export default function WelcomeMessage(props: {
     loading,
     error,
     data: musicNfts,
-  } = useFetchMusicNfts(undefined, "steev.eth");
+  } = useFetchMusicNfts(
+    { collectionAddress: "0xabEFBc9fD2F806065b4f3C237d4b59D9A97Bcac7" },
+    undefined,
+    { sortKey: "MINTED", sortDirection: "DESC" },
+    10
+  );
   return (
     <View style={{ width: "100%", flex: 1 }}>
       <View style={{ width: "100%", alignItems: "center" }}>
         <View style={{ width: "80%", alignItems: "center", marginTop: 18 }}>
-          <Text style={{ fontSize: 18, marginBottom: 18 }}>
+          <Text style={{ fontSize: 24, marginBottom: 18 }}>
             welcome to onchain.fm
           </Text>
           <View style={{ alignItems: "flex-start" }}>
@@ -32,6 +37,11 @@ export default function WelcomeMessage(props: {
         </View>
       </View>
       <SafeAreaView style={styles.safeAreaView}>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <Text style={{ fontSize: 18, padding: 8 }}>
+            recently minted on Zora
+          </Text>
+        </View>
         <SongListing
           songs={loading || error ? [] : musicNfts}
           onChangeCurrentSong={props.onChangeCurrentSong}
