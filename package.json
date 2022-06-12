@@ -2,12 +2,15 @@
   "name": "shuffleonchain",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "homepage": "https://sjiang2019.github.io/onchain.fm/",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "deploy": "gh-pages -d web-build",
+    "predeploy": "expo build:web"
   },
   "dependencies": {
     "@apollo/client": "^3.6.6",
@@ -25,6 +28,7 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.66.13",
+    "gh-pages": "^4.0.0",
     "typescript": "~4.3.5"
   },
   "private": true
