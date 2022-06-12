@@ -2,7 +2,7 @@
   "name": "shuffleonchain",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
-  "homepage": "https://sjiang2019.github.io/onchain.fm/",
+  "homepage": "https://onchainfm.xyz",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
