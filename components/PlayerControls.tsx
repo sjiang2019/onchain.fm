@@ -131,9 +131,9 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
               disabled={props.queueState.currentLoadedSong == null}
             >
               {props.queueState.isPlaying ? (
-                <Text style={{ fontSize: 48 }}>🌑</Text>
+                <Text style={{ fontSize: 48 }}>🌝</Text>
               ) : (
-                <Text style={{ fontSize: 48 }}>☀️</Text>
+                <Text style={{ fontSize: 48 }}>🌞</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity

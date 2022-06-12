@@ -32,7 +32,7 @@ export function useToast(duration?: number): ToastState {
         position: -200,
         animation: true,
         hideOnPress: true,
-        textColor: "black",
+        textColor: "#2d2d2d",
       });
 
       setTimeout(() => {

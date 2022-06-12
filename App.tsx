@@ -80,23 +80,6 @@ export default function App() {
             </View>
           </View>
         </View>
-        {/* <Toast
-          visible={true}
-          shadow={false}
-          backgroundColor="white"
-          duration={0.5}
-          containerStyle={{
-            width: "100%",
-            borderRadius: 10,
-            borderTopColor: "green",
-            borderTopWidth: 8,
-          }}
-          position={-200}
-          animation={true}
-          hideOnPress={true}
-        >
-          This is a message
-        </Toast> */}
       </ApolloProvider>
     </RootSiblingParent>
   );
