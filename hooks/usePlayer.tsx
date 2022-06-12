@@ -3,6 +3,7 @@ import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useState } from "react";
 import { Token } from "../models/token";
 import { useToast } from "./useToast";
+import useQueue, { QueueState } from "./useQueue";
 
 export interface LoadedSong {
   song: Token;
@@ -10,17 +11,10 @@ export interface LoadedSong {
 }
 
 export interface PlayerState {
-  userQueue: Array<Token>;
-  globalQueue: Array<Token>;
-  addToUserQueue: (song: Token) => void;
-  setGlobalQueue: (songs: Array<Token>) => void;
-  addToHistory: (song: Token) => void;
   handlePlayPreviousSong: () => void;
   handlePlayNextSong: () => void;
   currentLoadedSong: LoadedSong | null;
   handleSetCurrentSong: (song: Token | null) => Promise<boolean>;
-  removeFromUserQueue: (song: Token) => void;
-  removeFromGlobalQueue: (song: Token) => void;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
   soundStatus: AVPlaybackStatus | null;
@@ -41,11 +35,8 @@ function fetchSoundWithTimeout(
   });
 }
 
-export function usePlayer(): PlayerState {
+export function usePlayer(queueState: QueueState): PlayerState {
   const { displayToast } = useToast();
-  const [history, setHistory] = useState<Array<Token>>([]);
-  const [userQueue, setUserQueue] = useState<Array<Token>>([]);
-  const [globalQueue, setGlobalQueue] = useState<Array<Token>>([]);
   const [currentLoadedSong, setCurrentLoadedSong] = useState<LoadedSong | null>(
     null
   );
@@ -54,22 +45,8 @@ export function usePlayer(): PlayerState {
   const [songJustFinished, setSongJustFinished] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // History
-  const addToHistory = (song: Token) => {
-    setHistory((curHistory: Array<Token>) => [...curHistory, song]);
-  };
-
-  // Queueing
-  const addToUserQueue = (song: Token) => {
-    setUserQueue((curUserQueue) => [...curUserQueue, song]);
-  };
-  const removeFromUserQueue = (song: Token) => {
-    setUserQueue((curUserQueue) => curUserQueue.filter((s) => s != song));
-  };
-  const removeFromGlobalQueue = (song: Token) => {
-    setGlobalQueue((curGlobalQueue) => curGlobalQueue.filter((s) => s != song));
-  };
+  // const { addToHistory, popFromHistory, popFromUserQueue, popFromGlobalQueue } =
+  // useQueue();
 
   // Playback
   const handleSetCurrentSong = async (song: Token | null): Promise<boolean> => {
@@ -104,32 +81,22 @@ export function usePlayer(): PlayerState {
   };
 
   const handlePlayPreviousSong = () => {
-    if (history.length > 0) {
-      const song = history[history.length - 1];
-      if (song != null) {
-        handleSetCurrentSong(song);
-        setHistory((curHistory) => [...curHistory.slice(0, -1)]);
-      }
+    const song = queueState.popFromHistory();
+    if (song != null) {
+      handleSetCurrentSong(song);
+    } else {
+      replayCurrentSong();
     }
-    return null;
   };
 
   const handlePlayNextSong = () => {
     if (currentLoadedSong != null) {
-      addToHistory(currentLoadedSong.song);
+      queueState.addToHistory(currentLoadedSong.song);
     }
-    if (userQueue.length > 0) {
-      const song = userQueue[0];
-      if (song != null) {
-        handleSetCurrentSong(song);
-        setUserQueue((curUserQueue) => [...curUserQueue.slice(1)]);
-      }
-    } else if (globalQueue.length > 0) {
-      const song = globalQueue[0];
-      if (song != null) {
-        handleSetCurrentSong(song);
-        setGlobalQueue((curGlobalQueue) => [...curGlobalQueue.slice(1)]);
-      }
+    const song =
+      queueState.popFromUserQueue() ?? queueState.popFromGlobalQueue();
+    if (song != null) {
+      handleSetCurrentSong(song);
     }
   };
 
@@ -158,17 +125,10 @@ export function usePlayer(): PlayerState {
     }
   }, [currentLoadedSong?.sound]);
   return {
-    userQueue,
-    globalQueue,
-    addToUserQueue,
-    setGlobalQueue,
-    addToHistory,
     handlePlayPreviousSong,
     handlePlayNextSong,
     currentLoadedSong,
     handleSetCurrentSong,
-    removeFromUserQueue,
-    removeFromGlobalQueue,
     isPlaying,
     setIsPlaying,
     soundStatus,

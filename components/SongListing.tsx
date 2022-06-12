@@ -4,7 +4,7 @@ import SongListItem from "./SongListItem";
 
 interface SongListingProps {
   songs: Array<Token>;
-  onChangeCurrentSong: (song: Token) => void;
+  onChangeCurrentSong: (songIdx: Token) => void;
   addToUserQueue: (song: Token) => void;
   removeFromQueue?: (song: Token) => void;
   hasNextPage?: boolean;

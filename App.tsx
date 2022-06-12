@@ -5,6 +5,7 @@ import { StatusBar, StyleSheet, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Player from "./components/Player";
 import { PlayerState, usePlayer } from "./hooks/usePlayer";
+import useQueue, { QueueState } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
 import QueueView from "./views/QueueView";
 import SearchView from "./views/SearchView";
@@ -16,7 +17,8 @@ const client = new ApolloClient({
 });
 
 export default function App() {
-  const playerState: PlayerState = usePlayer();
+  const queueState: QueueState = useQueue();
+  const playerState: PlayerState = usePlayer(queueState);
   const [isQueueViewOpen, setIsQueueViewOpen] = useState(false);
   const [isSongInfoViewOpen, setIsSongInfoViewOpen] = useState(false);
   const [hasSetAudioMode, setHasSetAudioMode] = useState(false);
@@ -56,6 +58,7 @@ export default function App() {
               )}
               {isQueueViewOpen && (
                 <QueueView
+                  queueState={queueState}
                   playerState={playerState}
                   handleCloseQueueView={() => setIsQueueViewOpen(false)}
                 />
@@ -64,6 +67,7 @@ export default function App() {
                 <SearchView
                   searchState={searchState}
                   playerState={playerState}
+                  queueState={queueState}
                 />
               )}
             </View>

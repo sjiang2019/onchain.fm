@@ -4,6 +4,7 @@ import SearchInput from "../components/SearchInput";
 import SongFetcher from "../components/SongFetcher";
 import WelcomeMessage from "../components/WelcomeMessage";
 import { PlayerState } from "../hooks/usePlayer";
+import { QueueState } from "../hooks/useQueue";
 import { SearchState } from "../hooks/useSearch";
 import { Collection } from "../models/collection";
 import { isAddressLike, isEnsLike } from "../utils";
@@ -24,6 +25,7 @@ const shouldQueryByOwner = (
 interface SearchViewProps {
   searchState: SearchState;
   playerState: PlayerState;
+  queueState: QueueState;
 }
 
 export default function SearchView(props: SearchViewProps): JSX.Element {
@@ -58,7 +60,7 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
         {submitted == null && (
           <WelcomeMessage
             onChangeCurrentSong={props.playerState.handleSetCurrentSong}
-            addToUserQueue={props.playerState.addToUserQueue}
+            addToUserQueue={props.queueState.addToUserQueue}
             isLoading={props.playerState.isLoading}
           />
         )}
@@ -73,8 +75,8 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
             collection={selectedCollection ?? undefined}
             ownerAddress={owner ?? undefined}
             onChangeSelectedSong={props.playerState.handleSetCurrentSong}
-            addToUserQueue={props.playerState.addToUserQueue}
-            handleChangeGlobalQueue={props.playerState.setGlobalQueue}
+            addToUserQueue={props.queueState.addToUserQueue}
+            handleChangeGlobalQueue={props.queueState.setGlobalQueue}
             isLoading={props.playerState.isLoading}
             offset={offset}
             setOffset={setOffset}
