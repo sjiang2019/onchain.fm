@@ -1,4 +1,3 @@
-import { Token } from "../models/token";
 import SongListing from "../components/SongListing";
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { PlayerState } from "../hooks/usePlayer";
@@ -13,9 +12,10 @@ interface QueueViewProps {
 }
 
 export default function QueueView(props: QueueViewProps): JSX.Element {
-  const handleAddToUserQueueFromGlobalQueue = (song: Token) => {
-    props.queueState.removeFromGlobalQueue(song);
+  const handleAddToUserQueueFromGlobalQueue = (songIdx: number) => {
+    const song = props.queueState.globalQueue[songIdx];
     props.queueState.addToUserQueue(song);
+    props.queueState.removeFromGlobalQueue(songIdx);
   };
   const song = props.playerState.currentLoadedSong?.song;
   return (
@@ -39,15 +39,20 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
             <Text style={{ fontSize: 18, paddingLeft: 16 }}>up next</Text>
             <SongListing
               songs={props.queueState.userQueue}
-              onChangeCurrentSong={async (song: Token) => {
+              onChangeCurrentSong={async (songIdx: number) => {
+                const song = props.queueState.userQueue[songIdx];
                 const didSetSong = await props.playerState.handleSetCurrentSong(
                   song
                 );
                 if (didSetSong) {
-                  props.queueState.removeFromUserQueue(song);
+                  props.queueState.removeFromUserQueue(songIdx);
                 }
               }}
-              addToUserQueue={props.queueState.addToUserQueue}
+              addToUserQueue={(songIdx: number) =>
+                props.queueState.addToUserQueue(
+                  props.queueState.userQueue[songIdx]
+                )
+              }
               removeFromQueue={props.queueState.removeFromUserQueue}
               isLoading={props.playerState.isLoading}
             />
@@ -59,11 +64,12 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
               <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
               <SongListing
                 songs={props.queueState.globalQueue}
-                onChangeCurrentSong={async (song: Token) => {
+                onChangeCurrentSong={async (songIdx: number) => {
+                  const song = props.queueState.globalQueue[songIdx];
                   const didSetSong =
                     await props.playerState.handleSetCurrentSong(song);
                   if (didSetSong) {
-                    props.queueState.removeFromGlobalQueue(song);
+                    props.queueState.removeFromGlobalQueue(songIdx);
                   }
                 }}
                 addToUserQueue={handleAddToUserQueueFromGlobalQueue}

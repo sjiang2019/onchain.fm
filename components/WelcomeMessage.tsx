@@ -19,6 +19,7 @@ export default function WelcomeMessage(props: {
     { sortKey: "MINTED", sortDirection: "DESC" },
     10
   );
+  const songs = loading || error ? [] : musicNfts;
   return (
     <View style={{ width: "100%", flex: 1 }}>
       <View style={{ width: "100%", alignItems: "center" }}>
@@ -43,9 +44,13 @@ export default function WelcomeMessage(props: {
           </Text>
         </View>
         <SongListing
-          songs={loading || error ? [] : musicNfts}
-          onChangeCurrentSong={props.onChangeCurrentSong}
-          addToUserQueue={props.addToUserQueue}
+          songs={songs}
+          onChangeCurrentSong={(songIdx: number) =>
+            props.onChangeCurrentSong(songs[songIdx])
+          }
+          addToUserQueue={(songIdx: number) =>
+            props.addToUserQueue(songs[songIdx])
+          }
           isLoading={props.isLoading}
         />
       </SafeAreaView>

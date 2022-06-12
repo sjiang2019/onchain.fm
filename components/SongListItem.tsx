@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useToast } from "../hooks/useToast";
 import { Token } from "../models/token";
 import SongDisplay from "./SongDisplay";
@@ -7,9 +7,9 @@ import Text from "./Text";
 interface SongListItemProps {
   isLoading: boolean;
   song: Token;
-  onChangeSong: (song: Token) => void;
+  onChangeSong: () => void;
   addToUserQueue: (song: Token) => void;
-  removeFromQueue?: (song: Token) => void;
+  removeFromQueue?: () => void;
 }
 
 export default function SongListItem(props: SongListItemProps): JSX.Element {
@@ -19,7 +19,7 @@ export default function SongListItem(props: SongListItemProps): JSX.Element {
       style={styles.container}
       onPress={() => {
         if (!props.isLoading) {
-          props.onChangeSong(props.song);
+          props.onChangeSong();
         }
       }}
       disabled={props.isLoading}
@@ -37,9 +37,9 @@ export default function SongListItem(props: SongListItemProps): JSX.Element {
         </TouchableOpacity>
         {props.removeFromQueue != null && (
           <TouchableOpacity
-            style={{ paddingTop: 6 }}
+            style={{ paddingTop: Platform.OS === "web" ? 2 : 6 }}
             onPress={() => {
-              props.removeFromQueue!(props.song);
+              props.removeFromQueue!();
             }}
           >
             <Text style={{ fontSize: 20 }}>✕</Text>

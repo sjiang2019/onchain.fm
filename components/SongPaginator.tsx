@@ -23,7 +23,13 @@ export default function SongPaginator(props: SongPaginatorProps): JSX.Element {
 
   return (
     <SongListing
-      {...props}
+      onChangeCurrentSong={(songIdx: number) =>
+        props.onChangeCurrentSong(currentPage[songIdx])
+      }
+      addToUserQueue={(songIdx: number) =>
+        props.addToUserQueue(currentPage[songIdx])
+      }
+      isLoading={props.isLoading}
       loadMoreButton={
         <TouchableOpacity
           style={styles.loadMoreButton}

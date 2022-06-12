@@ -7,11 +7,11 @@ export interface QueueState {
   popFromHistory: () => Token | null;
   userQueue: Array<Token>;
   addToUserQueue: (song: Token) => void;
-  removeFromUserQueue: (song: Token) => void;
+  removeFromUserQueue: (songIdx: number) => void;
   popFromUserQueue: () => Token | null;
   globalQueue: Array<Token>;
   setGlobalQueue: (songs: Array<Token>) => void;
-  removeFromGlobalQueue: (song: Token) => void;
+  removeFromGlobalQueue: (songIdx: number) => void;
   popFromGlobalQueue: () => Token | null;
 }
 
@@ -40,8 +40,10 @@ export default function useQueue(): QueueState {
   const addToUserQueue = (song: Token) => {
     setUserQueue((curUserQueue) => [...curUserQueue, song]);
   };
-  const removeFromUserQueue = (song: Token) => {
-    setUserQueue((curUserQueue) => curUserQueue.filter((s) => s != song));
+  const removeFromUserQueue = (songIdx: number) => {
+    setUserQueue((curUserQueue) =>
+      curUserQueue.filter((s, idx) => idx != songIdx)
+    );
   };
   const popFromUserQueue = (): Token | null => {
     if (userQueue.length > 0) {
@@ -53,8 +55,10 @@ export default function useQueue(): QueueState {
   };
 
   // Global Queue
-  const removeFromGlobalQueue = (song: Token) => {
-    setGlobalQueue((curGlobalQueue) => curGlobalQueue.filter((s) => s != song));
+  const removeFromGlobalQueue = (songIdx: number) => {
+    setGlobalQueue((curGlobalQueue) =>
+      curGlobalQueue.filter((s, idx) => idx != songIdx)
+    );
   };
   const popFromGlobalQueue = (): Token | null => {
     if (globalQueue.length > 0) {
