@@ -3,7 +3,6 @@ import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useState } from "react";
 import { Token } from "../models/token";
 import { useToast } from "./useToast";
-// import Toast from "react-native-toast-message";
 
 export interface LoadedSong {
   song: Token;

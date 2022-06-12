@@ -39,7 +39,7 @@ export default function WelcomeMessage(props: {
       <SafeAreaView style={styles.safeAreaView}>
         <View style={{ width: "100%", alignItems: "center" }}>
           <Text style={{ fontSize: 18, padding: 8 }}>
-            recently minted on Zora
+            recently minted on zora
           </Text>
         </View>
         <SongListing

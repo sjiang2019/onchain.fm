@@ -1,6 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useToast } from "../hooks/useToast";
-// import Toast from "react-native-toast-message";
 import { Token } from "../models/token";
 import SongDisplay from "./SongDisplay";
 import Text from "./Text";

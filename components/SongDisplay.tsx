@@ -1,3 +1,4 @@
+import imageLoading from "../assets/image-loading.png";
 import { Image, View } from "react-native";
 import { Token } from "../models/token";
 import Text from "./Text";
@@ -9,6 +10,7 @@ export default function SongDisplay(props: { song: Token }): JSX.Element {
     >
       <View style={{ marginRight: 10 }}>
         <Image
+          defaultSource={imageLoading}
           source={{ uri: props.song.imageUri }}
           style={{ height: 33, width: 33, borderRadius: 4 }}
         />
