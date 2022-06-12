@@ -79,7 +79,6 @@ export function useQueue(): QueueState {
       try {
         setIsLoading(true);
         const { sound } = await fetchSoundWithTimeout(song.audioUri, 3000);
-        console.log("sound", sound);
         if (sound != null) {
           setCurrentLoadedSong({ song: song, sound: sound });
           didSuccessfullySetSong = true;
@@ -92,7 +91,11 @@ export function useQueue(): QueueState {
           });
         }
       } catch (e) {
-        displayToast(`audio encoding for ${song.name} in progress`, "error");
+        displayToast(
+          `audio encoding for ${song.name} in progress`,
+          "error",
+          2000
+        );
       } finally {
         setIsLoading(false);
       }
