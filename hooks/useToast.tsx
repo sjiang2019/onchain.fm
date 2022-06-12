@@ -4,18 +4,26 @@ import Toast from "react-native-root-toast";
 type ToastType = "success" | "error";
 
 export interface ToastState {
-  displayToast: (message: string, type: ToastType) => void;
+  displayToast: (message: string, type: ToastType, durationMs?: number) => void;
 }
 
-export function useToast(duration?: number): ToastState {
+export function useToast(): ToastState {
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<ToastType | null>(null);
+  const [duration, setDuration] = useState<number | null>(null);
 
-  const displayToast = (toastMessage: string, toastType: ToastType) => {
+  const displayToast = (
+    toastMessage: string,
+    toastType: ToastType,
+    durationMs?: number
+  ) => {
     setMessage(toastMessage);
     setShowToast(true);
     setToastType(toastType);
+    if (durationMs != null) {
+      setDuration(durationMs);
+    }
   };
 
   useEffect(() => {
@@ -40,7 +48,7 @@ export function useToast(duration?: number): ToastState {
         setShowToast(false);
       }, duration ?? 700);
     }
-  }, [showToast, message, toastType]);
+  }, [showToast, message, toastType, duration]);
 
   return {
     displayToast,

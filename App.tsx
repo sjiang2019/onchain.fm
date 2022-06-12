@@ -1,9 +1,8 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeIOS } from "expo-av";
 import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
-import Toast from "react-native-root-toast";
 import Player from "./components/Player";
 import { QueueState, useQueue } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
@@ -26,6 +25,7 @@ export default function App() {
     const setUpSound = async () => {
       await Audio.setAudioModeAsync({
         staysActiveInBackground: true,
+        interruptionModeIOS: InterruptionModeIOS.DoNotMix,
         allowsRecordingIOS: false,
         playsInSilentModeIOS: true,
       });

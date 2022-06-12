@@ -1,3 +1,4 @@
+import imageLoading from "../assets/image-loading.png";
 import { Token } from "../models/token";
 import {
   Image,
@@ -21,13 +22,12 @@ export default function SongInfoView(props: SongInfoViewProps): JSX.Element {
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView style={{ paddingLeft: 16, paddingRight: 16 }}>
           <View style={styles.header}>
-            <Text style={{ fontSize: 24, marginBottom: 12 }}>{song.name}</Text>
-            {song?.imageUri && (
-              <Image
-                source={{ uri: song?.imageUri }}
-                style={{ width: 256, height: 256 }}
-              />
-            )}
+            <Text style={{ fontSize: 24, marginBottom: 24 }}>{song.name}</Text>
+            <Image
+              defaultSource={imageLoading}
+              source={{ uri: song?.imageUri }}
+              style={{ width: 256, height: 256 }}
+            />
           </View>
           <Text style={{ fontSize: 18 }}>
             {song.collectionName} #{song.tokenId}

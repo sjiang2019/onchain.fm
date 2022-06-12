@@ -24,13 +24,7 @@ interface PlayerProps {
 
 export default function Player(props: PlayerProps): JSX.Element {
   const sound = props.queueState.currentLoadedSong?.sound;
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+
   useEffect(() => {
     if (sound != null) {
       if (props.queueState.isPlaying) {

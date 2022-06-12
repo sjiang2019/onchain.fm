@@ -36,14 +36,18 @@ interface PlayerControlProps {
 
 export default function PlayerControls(props: PlayerControlProps): JSX.Element {
   const [curMs, setCurMs] = useState(0);
-  const [endMs, setEndMs] = useState(0);
+  const [endMs, setEndMs] = useState(1);
   const [isSliding, setIsSliding] = useState(false);
 
   useEffect(() => {
     const status = props.queueState.soundStatus as AVPlaybackStatusSuccess;
     if (status != null && !isSliding) {
+      const duration =
+        status.durationMillis != null && !isNaN(status.durationMillis)
+          ? status.durationMillis
+          : 1;
       setCurMs(status.positionMillis);
-      setEndMs(status.durationMillis ?? 0);
+      setEndMs(duration);
     }
   }, [props.queueState.soundStatus, setCurMs, setEndMs, isSliding]);
 
