@@ -2,7 +2,8 @@ import { Sound } from "expo-av/build/Audio";
 import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useState } from "react";
 import { Token } from "../models/token";
-import Toast from "react-native-toast-message";
+import { useToast } from "./useToast";
+// import Toast from "react-native-toast-message";
 
 export interface LoadedSong {
   song: Token;
@@ -42,6 +43,7 @@ function fetchSoundWithTimeout(
 }
 
 export function useQueue(): QueueState {
+  const { displayToast } = useToast();
   const [history, setHistory] = useState<Array<Token>>([]);
   const [userQueue, setUserQueue] = useState<Array<Token>>([]);
   const [globalQueue, setGlobalQueue] = useState<Array<Token>>([]);
@@ -73,10 +75,12 @@ export function useQueue(): QueueState {
   // Playback
   const handleSetCurrentSong = async (song: Token | null): Promise<boolean> => {
     let didSuccessfullySetSong = false;
+
     if (song != null && song.audioUri != null && !isLoading) {
       try {
         setIsLoading(true);
         const { sound } = await fetchSoundWithTimeout(song.audioUri, 3000);
+        console.log("sound", sound);
         if (sound != null) {
           setCurrentLoadedSong({ song: song, sound: sound });
           didSuccessfullySetSong = true;
@@ -89,11 +93,7 @@ export function useQueue(): QueueState {
           });
         }
       } catch (e) {
-        Toast.show({
-          type: "error",
-          text1: "audio encoding in progress",
-          text2: `${song.name}`,
-        });
+        displayToast(`audio encoding for ${song.name} in progress`, "error");
       } finally {
         setIsLoading(false);
       }

@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
+import { useToast } from "../hooks/useToast";
+// import Toast from "react-native-toast-message";
 import { Token } from "../models/token";
 import SongDisplay from "./SongDisplay";
 import Text from "./Text";
@@ -13,6 +14,7 @@ interface SongListItemProps {
 }
 
 export default function SongListItem(props: SongListItemProps): JSX.Element {
+  const { displayToast } = useToast();
   return (
     <TouchableOpacity
       style={styles.container}
@@ -28,10 +30,7 @@ export default function SongListItem(props: SongListItemProps): JSX.Element {
         <TouchableOpacity
           onPress={() => {
             props.addToUserQueue(props.song);
-            Toast.show({
-              type: "success",
-              text1: "added to queue",
-            });
+            displayToast("added to queue", "success");
           }}
           style={{ marginRight: 20 }}
         >

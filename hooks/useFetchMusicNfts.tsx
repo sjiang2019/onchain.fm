@@ -29,9 +29,15 @@ export const TokenFragment = gql`
 `;
 
 export const MusicNFTSearchQuery = gql`
-  query MusicNFTs($collectionAddresses: [String!], $ownerAddresses: [String!]) {
+  query MusicNFTs(
+    $collectionAddresses: [String!]
+    $ownerAddresses: [String!]
+    $sort: TokenSortInput
+    $limit: Int!
+  ) {
     tokens(
-      pagination: { limit: 500 }
+      pagination: { limit: $limit }
+      sort: $sort
       where: {
         collectionAddresses: $collectionAddresses
         ownerAddresses: $ownerAddresses
@@ -50,7 +56,9 @@ export const MusicNFTSearchQuery = gql`
 
 export function useFetchMusicNfts(
   collection?: Collection,
-  ownerAddress?: string
+  ownerAddress?: string,
+  sort?: { [key: string]: string },
+  limit?: number
 ): { loading: boolean; error?: ApolloError; data: Array<Token> } {
   const collectionAddresses =
     collection == null ? undefined : [collection.collectionAddress];
@@ -59,6 +67,8 @@ export function useFetchMusicNfts(
     variables: {
       collectionAddresses: collectionAddresses,
       ownerAddresses: ownerAddresses,
+      limit: limit ?? 500,
+      sort: sort,
     },
     skip: collection == null && ownerAddress == null,
   });

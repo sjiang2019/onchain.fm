@@ -2,7 +2,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
-import Toast from "react-native-toast-message";
+import { RootSiblingParent } from "react-native-root-siblings";
+import Toast from "react-native-root-toast";
 import Player from "./components/Player";
 import { QueueState, useQueue } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
@@ -34,54 +35,70 @@ export default function App() {
       setHasSetAudioMode(true);
     }
   });
-
   return (
-    <ApolloProvider client={client}>
-      <View style={styles.container}>
-        <StatusBar />
-        <View style={styles.screen}>
-          <View
-            style={{
-              width: "100%",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
-              <SongInfoView song={queueState.currentLoadedSong.song} />
-            )}
-            {isQueueViewOpen && (
-              <QueueView
+    <RootSiblingParent>
+      <ApolloProvider client={client}>
+        <View style={styles.container}>
+          <StatusBar />
+          <View style={styles.screen}>
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
+                <SongInfoView song={queueState.currentLoadedSong.song} />
+              )}
+              {isQueueViewOpen && (
+                <QueueView
+                  queueState={queueState}
+                  handleCloseQueueView={() => setIsQueueViewOpen(false)}
+                />
+              )}
+              {!isSongInfoViewOpen && !isQueueViewOpen && (
+                <SearchView searchState={searchState} queueState={queueState} />
+              )}
+            </View>
+            <View style={styles.player}>
+              <Player
                 queueState={queueState}
-                handleCloseQueueView={() => setIsQueueViewOpen(false)}
-              />
-            )}
-            {!isSongInfoViewOpen && !isQueueViewOpen && (
-              <SearchView searchState={searchState} queueState={queueState} />
-            )}
-          </View>
-
-          <View style={styles.player}>
-            <Player
-              queueState={queueState}
-              onChangeIsSongInfoViewOpen={() => {
-                setIsSongInfoViewOpen(!isSongInfoViewOpen);
-                setIsQueueViewOpen(false);
-              }}
-              handleToggleQueueView={() => {
-                if (!isQueueViewOpen) {
-                  setIsQueueViewOpen(true);
-                  setIsSongInfoViewOpen(false);
-                } else {
+                onChangeIsSongInfoViewOpen={() => {
+                  setIsSongInfoViewOpen(!isSongInfoViewOpen);
                   setIsQueueViewOpen(false);
-                }
-              }}
-            />
+                }}
+                handleToggleQueueView={() => {
+                  if (!isQueueViewOpen) {
+                    setIsQueueViewOpen(true);
+                    setIsSongInfoViewOpen(false);
+                  } else {
+                    setIsQueueViewOpen(false);
+                  }
+                }}
+              />
+            </View>
           </View>
         </View>
-        <Toast position="bottom" bottomOffset={200} />
-      </View>
-    </ApolloProvider>
+        {/* <Toast
+          visible={true}
+          shadow={false}
+          backgroundColor="white"
+          duration={0.5}
+          containerStyle={{
+            width: "100%",
+            borderRadius: 10,
+            borderTopColor: "green",
+            borderTopWidth: 8,
+          }}
+          position={-200}
+          animation={true}
+          hideOnPress={true}
+        >
+          This is a message
+        </Toast> */}
+      </ApolloProvider>
+    </RootSiblingParent>
   );
 }
 
