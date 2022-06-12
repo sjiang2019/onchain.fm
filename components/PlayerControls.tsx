@@ -108,7 +108,7 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
               onPress={() =>
                 props.playerState.setIsLooping(!props.playerState.isLooping)
               }
-              style={{ paddingTop: 4 }}
+              style={{ paddingTop: 4, paddingLeft: 12, paddingRight: 12 }}
             >
               <Text
                 style={{
@@ -146,7 +146,10 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
             >
               <Text style={{ fontSize: 48 }}>🌛</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={props.handleToggleQueueView}>
+            <TouchableOpacity
+              onPress={props.handleToggleQueueView}
+              style={{ paddingLeft: 12, paddingRight: 12 }}
+            >
               <Text
                 style={{
                   fontSize: 32,
