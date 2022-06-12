@@ -1,0 +1,34 @@
+{
+  "files": {
+    "app.js": "/sjiang2019/onchain.fm/static/js/app.b3850c05.chunk.js",
+    "app.js.map": "/sjiang2019/onchain.fm/static/js/app.b3850c05.chunk.js.map",
+    "runtime~app.js": "/sjiang2019/onchain.fm/static/js/runtime~app.923d5c76.js",
+    "runtime~app.js.map": "/sjiang2019/onchain.fm/static/js/runtime~app.923d5c76.js.map",
+    "static/js/2.9c01d597.chunk.js": "/sjiang2019/onchain.fm/static/js/2.9c01d597.chunk.js",
+    "static/js/2.9c01d597.chunk.js.map": "/sjiang2019/onchain.fm/static/js/2.9c01d597.chunk.js.map",
+    "fonts/AntDesign.ttf": "/sjiang2019/onchain.fm/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/sjiang2019/onchain.fm/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/sjiang2019/onchain.fm/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/sjiang2019/onchain.fm/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/sjiang2019/onchain.fm/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/sjiang2019/onchain.fm/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Fontisto.ttf": "/sjiang2019/onchain.fm/./fonts/Fontisto.ttf",
+    "fonts/Foundation.ttf": "/sjiang2019/onchain.fm/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/sjiang2019/onchain.fm/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/sjiang2019/onchain.fm/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/sjiang2019/onchain.fm/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/sjiang2019/onchain.fm/./fonts/SimpleLineIcons.ttf",
+    "favicon-16.png": "/sjiang2019/onchain.fm/favicon-16.png",
+    "favicon-32.png": "/sjiang2019/onchain.fm/favicon-32.png",
+    "favicon.ico": "/sjiang2019/onchain.fm/favicon.ico",
+    "index.html": "/sjiang2019/onchain.fm/index.html",
+    "manifest.json": "/sjiang2019/onchain.fm/manifest.json",
+    "serve.json": "/sjiang2019/onchain.fm/serve.json",
+    "static/js/2.9c01d597.chunk.js.LICENSE.txt": "/sjiang2019/onchain.fm/static/js/2.9c01d597.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.923d5c76.js",
+    "static/js/2.9c01d597.chunk.js",
+    "static/js/app.b3850c05.chunk.js"
+  ]
+}
