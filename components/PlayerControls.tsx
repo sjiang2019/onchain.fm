@@ -2,7 +2,7 @@ import { AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import Slider from "@react-native-community/slider";
-import { QueueState } from "../hooks/useQueue";
+import { PlayerState } from "../hooks/usePlayer";
 import Text from "./Text";
 import { formatMs } from "../utils";
 
@@ -29,7 +29,7 @@ function TrackSlider(props: {
 }
 
 interface PlayerControlProps {
-  queueState: QueueState;
+  playerState: PlayerState;
   onChangeIsPlayerOpen: () => void;
   handleToggleQueueView: () => void;
 }
@@ -40,7 +40,7 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
   const [isSliding, setIsSliding] = useState(false);
 
   useEffect(() => {
-    const status = props.queueState.soundStatus as AVPlaybackStatusSuccess;
+    const status = props.playerState.soundStatus as AVPlaybackStatusSuccess;
     if (status != null && !isSliding) {
       const duration =
         status.durationMillis != null && !isNaN(status.durationMillis)
@@ -49,10 +49,10 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
       setCurMs(status.positionMillis);
       setEndMs(duration);
     }
-  }, [props.queueState.soundStatus, setCurMs, setEndMs, isSliding]);
+  }, [props.playerState.soundStatus, setCurMs, setEndMs, isSliding]);
 
-  const nowPlaying = props.queueState.currentLoadedSong
-    ? `${props.queueState.currentLoadedSong.song.collectionName}: ${props.queueState.currentLoadedSong.song.name}`
+  const nowPlaying = props.playerState.currentLoadedSong
+    ? `${props.playerState.currentLoadedSong.song.collectionName}: ${props.playerState.currentLoadedSong.song.name}`
     : "~ vibing to silence ~";
   return (
     <View style={{ width: "100%" }}>
@@ -62,7 +62,7 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
           endMs={endMs}
           onSlidingStart={() => setIsSliding(true)}
           onSlidingComplete={async (value: number) => {
-            await props.queueState.currentLoadedSong?.sound.setPositionAsync(
+            await props.playerState.currentLoadedSong?.sound.setPositionAsync(
               value
             );
             setIsSliding(false);
@@ -72,13 +72,13 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
       <View>
         <TouchableOpacity
           onPress={() => {
-            if (props.queueState.currentLoadedSong != null) {
+            if (props.playerState.currentLoadedSong != null) {
               props.onChangeIsPlayerOpen();
             }
           }}
           disabled={
-            props.queueState.currentLoadedSong == null ||
-            props.queueState.isLoading
+            props.playerState.currentLoadedSong == null ||
+            props.playerState.isLoading
           }
           style={styles.container}
         >
@@ -106,7 +106,7 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
           <View style={styles.controlsView}>
             <TouchableOpacity
               onPress={() =>
-                props.queueState.setIsLooping(!props.queueState.isLooping)
+                props.playerState.setIsLooping(!props.playerState.isLooping)
               }
               style={{ paddingTop: 4 }}
             >
@@ -114,35 +114,35 @@ export default function PlayerControls(props: PlayerControlProps): JSX.Element {
                 style={{
                   fontSize: Platform.OS === "web" ? 24 : 42,
                   lineHeight: Platform.OS === "web" ? 48 : 48,
-                  color: props.queueState.isLooping ? "#9B59B6" : "white",
+                  color: props.playerState.isLooping ? "#9B59B6" : "white",
                 }}
               >
                 ⟳
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => props.queueState.handlePlayPreviousSong()}
-              disabled={props.queueState.isLoading}
+              onPress={() => props.playerState.handlePlayPreviousSong()}
+              disabled={props.playerState.isLoading}
             >
               <Text style={{ fontSize: 48 }}>🌜</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                if (props.queueState.currentLoadedSong != null) {
-                  props.queueState.setIsPlaying(!props.queueState.isPlaying);
+                if (props.playerState.currentLoadedSong != null) {
+                  props.playerState.setIsPlaying(!props.playerState.isPlaying);
                 }
               }}
-              disabled={props.queueState.currentLoadedSong == null}
+              disabled={props.playerState.currentLoadedSong == null}
             >
-              {props.queueState.isPlaying ? (
+              {props.playerState.isPlaying ? (
                 <Text style={{ fontSize: 48 }}>🌝</Text>
               ) : (
                 <Text style={{ fontSize: 48 }}>🌞</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => props.queueState.handlePlayNextSong()}
-              disabled={props.queueState.isLoading}
+              onPress={() => props.playerState.handlePlayNextSong()}
+              disabled={props.playerState.isLoading}
             >
               <Text style={{ fontSize: 48 }}>🌛</Text>
             </TouchableOpacity>

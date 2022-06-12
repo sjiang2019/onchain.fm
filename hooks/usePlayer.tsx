@@ -9,7 +9,7 @@ export interface LoadedSong {
   sound: Sound;
 }
 
-export interface QueueState {
+export interface PlayerState {
   userQueue: Array<Token>;
   globalQueue: Array<Token>;
   addToUserQueue: (song: Token) => void;
@@ -41,7 +41,7 @@ function fetchSoundWithTimeout(
   });
 }
 
-export function useQueue(): QueueState {
+export function usePlayer(): PlayerState {
   const { displayToast } = useToast();
   const [history, setHistory] = useState<Array<Token>>([]);
   const [userQueue, setUserQueue] = useState<Array<Token>>([]);
