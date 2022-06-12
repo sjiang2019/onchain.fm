@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Player from "./components/Player";
+import { useFetchCollectionsByAddress } from "./hooks/useFetchCollectionsByAddress";
 import { QueueState, useQueue } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
+import { Collection } from "./models/collection";
 import QueueView from "./views/QueueView";
 import SearchView from "./views/SearchView";
 import SongInfoView from "./views/SongInfoView";
@@ -49,7 +51,10 @@ export default function App() {
               }}
             >
               {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
-                <SongInfoView song={queueState.currentLoadedSong.song} />
+                <SongInfoView
+                  song={queueState.currentLoadedSong.song}
+                  handleCloseSongInfoView={() => setIsSongInfoViewOpen(false)}
+                />
               )}
               {isQueueViewOpen && (
                 <QueueView

@@ -48,6 +48,7 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
         <View style={{ width: "100%" }}>
           <SearchInput
             text={query}
+            submitted={submitted}
             onChangeText={onChangeQuery}
             onChangeSubmittedText={onChangeSubmitted}
           />

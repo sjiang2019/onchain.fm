@@ -51,21 +51,25 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
             />
           </View>
         )}
-        <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
-        <SongListing
-          songs={props.queueState.globalQueue}
-          onChangeCurrentSong={async (song: Token) => {
-            const didSetSong = await props.queueState.handleSetCurrentSong(
-              song
-            );
-            if (didSetSong) {
-              props.queueState.removeFromGlobalQueue(song);
-            }
-          }}
-          addToUserQueue={handleAddToUserQueueFromGlobalQueue}
-          removeFromQueue={props.queueState.removeFromGlobalQueue}
-          isLoading={props.queueState.isLoading}
-        />
+        {props.queueState.currentLoadedSong?.song != null &&
+          props.queueState.globalQueue.length > 0 && (
+            <View>
+              <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
+              <SongListing
+                songs={props.queueState.globalQueue}
+                onChangeCurrentSong={async (song: Token) => {
+                  const didSetSong =
+                    await props.queueState.handleSetCurrentSong(song);
+                  if (didSetSong) {
+                    props.queueState.removeFromGlobalQueue(song);
+                  }
+                }}
+                addToUserQueue={handleAddToUserQueueFromGlobalQueue}
+                removeFromQueue={props.queueState.removeFromGlobalQueue}
+                isLoading={props.queueState.isLoading}
+              />
+            </View>
+          )}
       </SafeAreaView>
     </View>
   );
