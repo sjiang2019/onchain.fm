@@ -31,8 +31,11 @@ export default function WelcomeMessage(props: {
             <Text style={{ fontSize: 16, marginBottom: 12 }}>
               ❀ search for a collection by name or address
             </Text>
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, marginBottom: 12 }}>
               ❀ search for an owner by ens or address
+            </Text>
+            <Text style={{ fontSize: 16 }}>
+              ❀ note: if a song doesn't play, try again later
             </Text>
           </View>
         </View>
