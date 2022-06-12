@@ -33,7 +33,9 @@ export default function SongListing(props: SongListingProps): JSX.Element {
         `${song.collectionAddress}-${song.tokenId}-${idx}`
       }
       ListFooterComponent={
-        props.hasNextPage === true ? props.loadMoreButton : undefined
+        props.hasNextPage === true && props.songs.length > 0
+          ? props.loadMoreButton
+          : undefined
       }
     />
   );

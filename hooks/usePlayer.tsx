@@ -80,13 +80,25 @@ export function usePlayer(queueState: QueueState): PlayerState {
     return didSuccessfullySetSong;
   };
 
-  const handlePlayPreviousSong = () => {
-    const song = queueState.popFromHistory();
-    if (song != null) {
-      handleSetCurrentSong(song);
-    } else {
-      replayCurrentSong();
+  const handlePlayPreviousSong = async () => {
+    const playPreviousSong = () => {
+      const song = queueState.popFromHistory();
+      if (song != null) {
+        handleSetCurrentSong(song);
+      } else {
+        replayCurrentSong();
+      }
+    };
+
+    if (currentLoadedSong != null) {
+      const status = await currentLoadedSong.sound.getStatusAsync();
+      const positionMs = (status as AVPlaybackStatusSuccess).positionMillis;
+      if (positionMs > 2500) {
+        replayCurrentSong();
+        return;
+      }
     }
+    playPreviousSong();
   };
 
   const handlePlayNextSong = () => {

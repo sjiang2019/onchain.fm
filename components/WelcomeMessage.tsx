@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     marginTop: 32,
-    marginBottom: 24,
     width: "100%",
   },
 });
