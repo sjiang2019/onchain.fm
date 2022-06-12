@@ -1,21 +1,23 @@
-import { Token } from "../models/token";
 import SongListing from "../components/SongListing";
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { QueueState } from "../hooks/useQueue";
+import { PlayerState } from "../hooks/usePlayer";
 import SongDisplay from "../components/SongDisplay";
 import Text from "../components/Text";
+import { QueueState } from "../hooks/useQueue";
 
 interface QueueViewProps {
+  playerState: PlayerState;
   queueState: QueueState;
   handleCloseQueueView: () => void;
 }
 
 export default function QueueView(props: QueueViewProps): JSX.Element {
-  const handleAddToUserQueueFromGlobalQueue = (song: Token) => {
-    props.queueState.removeFromGlobalQueue(song);
+  const handleAddToUserQueueFromGlobalQueue = (songIdx: number) => {
+    const song = props.queueState.globalQueue[songIdx];
     props.queueState.addToUserQueue(song);
+    props.queueState.removeFromGlobalQueue(songIdx);
   };
-  const song = props.queueState.currentLoadedSong?.song;
+  const song = props.playerState.currentLoadedSong?.song;
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -37,35 +39,45 @@ export default function QueueView(props: QueueViewProps): JSX.Element {
             <Text style={{ fontSize: 18, paddingLeft: 16 }}>up next</Text>
             <SongListing
               songs={props.queueState.userQueue}
-              onChangeCurrentSong={async (song: Token) => {
-                const didSetSong = await props.queueState.handleSetCurrentSong(
+              onChangeCurrentSong={async (songIdx: number) => {
+                const song = props.queueState.userQueue[songIdx];
+                const didSetSong = await props.playerState.handleSetCurrentSong(
                   song
                 );
                 if (didSetSong) {
-                  props.queueState.removeFromUserQueue(song);
+                  props.queueState.removeFromUserQueue(songIdx);
                 }
               }}
-              addToUserQueue={props.queueState.addToUserQueue}
+              addToUserQueue={(songIdx: number) =>
+                props.queueState.addToUserQueue(
+                  props.queueState.userQueue[songIdx]
+                )
+              }
               removeFromQueue={props.queueState.removeFromUserQueue}
-              isLoading={props.queueState.isLoading}
+              isLoading={props.playerState.isLoading}
             />
           </View>
         )}
-        <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
-        <SongListing
-          songs={props.queueState.globalQueue}
-          onChangeCurrentSong={async (song: Token) => {
-            const didSetSong = await props.queueState.handleSetCurrentSong(
-              song
-            );
-            if (didSetSong) {
-              props.queueState.removeFromGlobalQueue(song);
-            }
-          }}
-          addToUserQueue={handleAddToUserQueueFromGlobalQueue}
-          removeFromQueue={props.queueState.removeFromGlobalQueue}
-          isLoading={props.queueState.isLoading}
-        />
+        {props.playerState.currentLoadedSong?.song != null &&
+          props.queueState.globalQueue.length > 0 && (
+            <View>
+              <Text style={{ fontSize: 18, paddingLeft: 16 }}>similar</Text>
+              <SongListing
+                songs={props.queueState.globalQueue}
+                onChangeCurrentSong={async (songIdx: number) => {
+                  const song = props.queueState.globalQueue[songIdx];
+                  const didSetSong =
+                    await props.playerState.handleSetCurrentSong(song);
+                  if (didSetSong) {
+                    props.queueState.removeFromGlobalQueue(songIdx);
+                  }
+                }}
+                addToUserQueue={handleAddToUserQueueFromGlobalQueue}
+                removeFromQueue={props.queueState.removeFromGlobalQueue}
+                isLoading={props.playerState.isLoading}
+              />
+            </View>
+          )}
       </SafeAreaView>
     </View>
   );

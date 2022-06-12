@@ -11,20 +11,19 @@ import Text from "./Text";
 
 interface SearchInputProps {
   text: string | null;
+  submitted: string | null;
   onChangeText: (query: string | null) => void;
   onChangeSubmittedText: (text: string | null) => void;
   placeholderText?: string;
 }
 
 export default function SearchInput(props: SearchInputProps): JSX.Element {
-  const [clicked, setClicked] = useState(false);
-
   return (
     <View style={styles.container}>
       <View
         style={[
           styles.searchInputBackground,
-          { width: clicked ? "85%" : "100%" },
+          { width: props.submitted != null ? "85%" : "100%" },
         ]}
       >
         <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
@@ -44,7 +43,6 @@ export default function SearchInput(props: SearchInputProps): JSX.Element {
             onSubmitEditing={() => props.onChangeSubmittedText(props.text)}
             value={props.text ?? ""}
             onChangeText={props.onChangeText}
-            onFocus={() => setClicked(true)}
           />
         </View>
         {props.text != null && props.text.length > 0 && (
@@ -56,12 +54,11 @@ export default function SearchInput(props: SearchInputProps): JSX.Element {
           </TouchableOpacity>
         )}
       </View>
-      {clicked && (
+      {props.submitted != null && (
         <TouchableOpacity
           onPress={() => {
             props.onChangeText(null);
             props.onChangeSubmittedText(null);
-            setClicked(false);
             Keyboard.dismiss();
           }}
           style={styles.cancelButton}

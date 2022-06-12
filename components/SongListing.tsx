@@ -4,9 +4,9 @@ import SongListItem from "./SongListItem";
 
 interface SongListingProps {
   songs: Array<Token>;
-  onChangeCurrentSong: (song: Token) => void;
-  addToUserQueue: (song: Token) => void;
-  removeFromQueue?: (song: Token) => void;
+  onChangeCurrentSong: (songIdx: number) => void;
+  addToUserQueue: (songIdx: number) => void;
+  removeFromQueue?: (songIdx: number) => void;
   hasNextPage?: boolean;
   loadMoreButton?: JSX.Element;
   isLoading: boolean;
@@ -16,20 +16,26 @@ export default function SongListing(props: SongListingProps): JSX.Element {
   return (
     <FlatList
       data={props.songs}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <SongListItem
           isLoading={props.isLoading}
           song={item}
-          onChangeSong={props.onChangeCurrentSong}
-          addToUserQueue={props.addToUserQueue}
-          removeFromQueue={props.removeFromQueue}
+          onChangeSong={() => props.onChangeCurrentSong(index)}
+          addToUserQueue={() => props.addToUserQueue(index)}
+          removeFromQueue={
+            props.removeFromQueue != null
+              ? () => props.removeFromQueue!(index)
+              : undefined
+          }
         />
       )}
       keyExtractor={(song: Token, idx: number) =>
         `${song.collectionAddress}-${song.tokenId}-${idx}`
       }
       ListFooterComponent={
-        props.hasNextPage === true ? props.loadMoreButton : undefined
+        props.hasNextPage === true && props.songs.length > 0
+          ? props.loadMoreButton
+          : undefined
       }
     />
   );

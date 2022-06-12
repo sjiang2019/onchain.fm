@@ -3,6 +3,7 @@ import CollectionFetcher from "../components/CollectionFetcher";
 import SearchInput from "../components/SearchInput";
 import SongFetcher from "../components/SongFetcher";
 import WelcomeMessage from "../components/WelcomeMessage";
+import { PlayerState } from "../hooks/usePlayer";
 import { QueueState } from "../hooks/useQueue";
 import { SearchState } from "../hooks/useSearch";
 import { Collection } from "../models/collection";
@@ -23,6 +24,7 @@ const shouldQueryByOwner = (
 
 interface SearchViewProps {
   searchState: SearchState;
+  playerState: PlayerState;
   queueState: QueueState;
 }
 
@@ -48,6 +50,7 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
         <View style={{ width: "100%" }}>
           <SearchInput
             text={query}
+            submitted={submitted}
             onChangeText={onChangeQuery}
             onChangeSubmittedText={onChangeSubmitted}
           />
@@ -56,9 +59,9 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
       <View style={styles.fetcherContainer}>
         {submitted == null && (
           <WelcomeMessage
-            onChangeCurrentSong={props.queueState.handleSetCurrentSong}
+            onChangeCurrentSong={props.playerState.handleSetCurrentSong}
             addToUserQueue={props.queueState.addToUserQueue}
-            isLoading={props.queueState.isLoading}
+            isLoading={props.playerState.isLoading}
           />
         )}
         {selectedCollection == null && submitted != null && (
@@ -71,10 +74,10 @@ export default function SearchView(props: SearchViewProps): JSX.Element {
           <SongFetcher
             collection={selectedCollection ?? undefined}
             ownerAddress={owner ?? undefined}
-            onChangeSelectedSong={props.queueState.handleSetCurrentSong}
+            onChangeSelectedSong={props.playerState.handleSetCurrentSong}
             addToUserQueue={props.queueState.addToUserQueue}
             handleChangeGlobalQueue={props.queueState.setGlobalQueue}
-            isLoading={props.queueState.isLoading}
+            isLoading={props.playerState.isLoading}
             offset={offset}
             setOffset={setOffset}
           />

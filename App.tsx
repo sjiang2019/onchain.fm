@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Player from "./components/Player";
-import { QueueState, useQueue } from "./hooks/useQueue";
+import { PlayerState, usePlayer } from "./hooks/usePlayer";
+import useQueue, { QueueState } from "./hooks/useQueue";
 import { useSearch } from "./hooks/useSearch";
 import QueueView from "./views/QueueView";
 import SearchView from "./views/SearchView";
@@ -17,6 +18,7 @@ const client = new ApolloClient({
 
 export default function App() {
   const queueState: QueueState = useQueue();
+  const playerState: PlayerState = usePlayer(queueState);
   const [isQueueViewOpen, setIsQueueViewOpen] = useState(false);
   const [isSongInfoViewOpen, setIsSongInfoViewOpen] = useState(false);
   const [hasSetAudioMode, setHasSetAudioMode] = useState(false);
@@ -48,22 +50,30 @@ export default function App() {
                 flex: 1,
               }}
             >
-              {isSongInfoViewOpen && queueState.currentLoadedSong != null && (
-                <SongInfoView song={queueState.currentLoadedSong.song} />
+              {isSongInfoViewOpen && playerState.currentLoadedSong != null && (
+                <SongInfoView
+                  song={playerState.currentLoadedSong.song}
+                  handleCloseSongInfoView={() => setIsSongInfoViewOpen(false)}
+                />
               )}
               {isQueueViewOpen && (
                 <QueueView
                   queueState={queueState}
+                  playerState={playerState}
                   handleCloseQueueView={() => setIsQueueViewOpen(false)}
                 />
               )}
               {!isSongInfoViewOpen && !isQueueViewOpen && (
-                <SearchView searchState={searchState} queueState={queueState} />
+                <SearchView
+                  searchState={searchState}
+                  playerState={playerState}
+                  queueState={queueState}
+                />
               )}
             </View>
             <View style={styles.player}>
               <Player
-                queueState={queueState}
+                playerState={playerState}
                 onChangeIsSongInfoViewOpen={() => {
                   setIsSongInfoViewOpen(!isSongInfoViewOpen);
                   setIsQueueViewOpen(false);

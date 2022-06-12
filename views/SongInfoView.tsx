@@ -13,6 +13,7 @@ import { useState } from "react";
 
 interface SongInfoViewProps {
   song: Token;
+  handleCloseSongInfoView: () => void;
 }
 export default function SongInfoView(props: SongInfoViewProps): JSX.Element {
   const song = props.song;
@@ -20,13 +21,19 @@ export default function SongInfoView(props: SongInfoViewProps): JSX.Element {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
+        <TouchableOpacity
+          onPress={() => props.handleCloseSongInfoView()}
+          style={{ marginBottom: 24, paddingLeft: 16, marginTop: 10 }}
+        >
+          <Text style={{ fontSize: 24 }}>✕</Text>
+        </TouchableOpacity>
         <ScrollView style={{ paddingLeft: 16, paddingRight: 16 }}>
           <View style={styles.header}>
             <Text style={{ fontSize: 24, marginBottom: 24 }}>{song.name}</Text>
             <Image
               defaultSource={imageLoading}
               source={{ uri: song?.imageUri }}
-              style={{ width: 256, height: 256 }}
+              style={{ width: 256, height: 256, borderRadius: 10 }}
             />
           </View>
           <Text style={{ fontSize: 18 }}>
@@ -76,7 +83,6 @@ const styles = StyleSheet.create({
   header: {
     width: "100%",
     alignItems: "center",
-    marginTop: 20,
     marginBottom: 20,
   },
   showMetadataButton: {

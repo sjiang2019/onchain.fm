@@ -1,7 +1,7 @@
 import { Sound } from "expo-av/build/Audio";
 import { useEffect } from "react";
 import { View } from "react-native";
-import { QueueState } from "../hooks/useQueue";
+import { PlayerState } from "../hooks/usePlayer";
 import PlayerControls from "./PlayerControls";
 
 const playSound = async (sound: Sound | null) => {
@@ -17,23 +17,23 @@ const pauseSong = async (sound: Sound | null) => {
 };
 
 interface PlayerProps {
-  queueState: QueueState;
+  playerState: PlayerState;
   onChangeIsSongInfoViewOpen: () => void;
   handleToggleQueueView: () => void;
 }
 
 export default function Player(props: PlayerProps): JSX.Element {
-  const sound = props.queueState.currentLoadedSong?.sound;
+  const sound = props.playerState.currentLoadedSong?.sound;
 
   useEffect(() => {
     if (sound != null) {
-      if (props.queueState.isPlaying) {
+      if (props.playerState.isPlaying) {
         playSound(sound);
       } else {
         pauseSong(sound);
       }
     }
-  }, [props.queueState.isPlaying, sound]);
+  }, [props.playerState.isPlaying, sound]);
   return (
     <View
       style={{
@@ -41,7 +41,7 @@ export default function Player(props: PlayerProps): JSX.Element {
       }}
     >
       <PlayerControls
-        queueState={props.queueState}
+        playerState={props.playerState}
         onChangeIsPlayerOpen={props.onChangeIsSongInfoViewOpen}
         handleToggleQueueView={props.handleToggleQueueView}
       />
