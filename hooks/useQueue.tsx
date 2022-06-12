@@ -147,6 +147,13 @@ export function useQueue(): QueueState {
     }
   }, [songJustFinished, setSongJustFinished]);
 
+  useEffect(() => {
+    if (currentLoadedSong?.sound != null) {
+      return () => {
+        currentLoadedSong.sound.unloadAsync();
+      };
+    }
+  }, [currentLoadedSong?.sound]);
   return {
     userQueue,
     globalQueue,
